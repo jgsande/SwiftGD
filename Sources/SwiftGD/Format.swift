@@ -90,9 +90,9 @@ extension LibGdExportableFormatter {
             throw GDError.invalidFormat
         }
         
-        defer { bytesPtr.deallocate() }
-        
-        return Data(bytes: bytesPtr, count: Int(size))
+        return Data(bytesNoCopy: bytesPtr,
+                    count: Int(size),
+                    deallocator: .custom({ ptr, _ in gdFree(ptr) }))
     }
 }
 
@@ -107,8 +107,6 @@ extension LibGdParametrizableExportFormatter {
         guard let bytesPtr = exportFunction(imagePtr, &size, exportParameters) else {
             throw GDError.invalidFormat
         }
-        
-        defer { bytesPtr.deallocate() }
         
         return Data(bytesNoCopy: bytesPtr,
                     count: Int(size),
