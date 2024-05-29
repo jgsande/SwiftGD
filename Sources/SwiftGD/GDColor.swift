@@ -1,4 +1,4 @@
-public struct Color {
+public struct GDColor {
     public var redComponent: Double
     public var greenComponent: Double
     public var blueComponent: Double
@@ -14,21 +14,36 @@ public struct Color {
 
 // MARK: Constants
 
-extension Color {
-    public static let red = Color(red: 1, green: 0, blue: 0, alpha: 1)
+extension GDColor {
+    public static let red = GDColor(red: 1, green: 0, blue: 0, alpha: 1)
 
-    public static let green = Color(red: 0, green: 1, blue: 0, alpha: 1)
+    public static let green = GDColor(red: 0, green: 1, blue: 0, alpha: 1)
 
-    public static let blue = Color(red: 0, green: 0, blue: 1, alpha: 1)
+    public static let blue = GDColor(red: 0, green: 0, blue: 1, alpha: 1)
 
-    public static let black = Color(red: 0, green: 0, blue: 0, alpha: 1)
+    public static let black = GDColor(red: 0, green: 0, blue: 0, alpha: 1)
 
-    public static let white = Color(red: 1, green: 1, blue: 1, alpha: 1)
+    public static let white = GDColor(red: 1, green: 1, blue: 1, alpha: 1)
+    
+    public static let clear = GDColor(red: 0, green: 0, blue: 0, alpha: 0)
+}
+
+// MARK: Utils
+
+extension GDColor {
+    public static func random(alpha: Double = 0.5) -> GDColor {
+        // Randomize the red, green, blue, and alpha (if not opaque) components of the color.
+        let red = Double.random(in: 0...1)
+        let green = Double.random(in: 0...1)
+        let blue = Double.random(in: 0...1)
+        
+        return GDColor(red: red, green: green, blue: blue, alpha: alpha)
+    }
 }
 
 // MARK: Hexadecimal
 
-extension Color {
+extension GDColor {
     /// The maximum representable integer for each color component.
     private static let maxHex: Int = 0xff
 
@@ -57,9 +72,9 @@ extension Color {
     ///   - leadingAlpha: Indicate whether given string should be treated as ARGB (`true`) or RGBA (`false`)
     /// - Throws: `.invalidColor` if given string does not match any of the above mentioned criteria or is not a valid hex color.
     public init(hex string: String, leadingAlpha: Bool = false) throws {
-        let string = try Color.sanitize(hex: string, leadingAlpha: leadingAlpha)
+        let string = try GDColor.sanitize(hex: string, leadingAlpha: leadingAlpha)
         guard let code = Int(string, radix: 16) else {
-            throw Error.invalidColor(reason: "0x\(string) is not a valid hex color code")
+            throw GDError.invalidColor(reason: "0x\(string) is not a valid hex color code")
         }
         self.init(hex: code, leadingAlpha: leadingAlpha)
     }
@@ -70,11 +85,11 @@ extension Color {
     ///   - color: The hexadecimal color value, incl. red, green, blue and alpha
     ///   - leadingAlpha: Indicate whether given code should be treated as ARGB (`true`) or RGBA (`false`)
     public init(hex color: Int, leadingAlpha: Bool = false) {
-        let max = Double(Color.maxHex)
-        let first = Double((color >> 24) & Color.maxHex) / max
-        let secnd = Double((color >> 16) & Color.maxHex) / max
-        let third = Double((color >>  8) & Color.maxHex) / max
-        let forth = Double((color >>  0) & Color.maxHex) / max
+        let max = Double(GDColor.maxHex)
+        let first = Double((color >> 24) & GDColor.maxHex) / max
+        let secnd = Double((color >> 16) & GDColor.maxHex) / max
+        let third = Double((color >>  8) & GDColor.maxHex) / max
+        let forth = Double((color >>  0) & GDColor.maxHex) / max
         if leadingAlpha {
             self.init(red: secnd, green: third, blue: forth, alpha: first) // ARGB
         } else {
@@ -104,12 +119,12 @@ extension Color {
         // Evaluate if fully fledged code w/wo alpha (e.g. `ffaabb` or `ffaabb44`), otherwise throw error
         switch string.count {
         case 6: // Hex color code without alpha (e.g. ffeeaa)
-            let alpha = String(Color.maxHex, radix: 16) // 0xff (opaque)
+            let alpha = String(GDColor.maxHex, radix: 16) // 0xff (opaque)
             return leadingAlpha ? alpha + string : string + alpha
         case 8: // Fully fledged hex color including alpha (e.g. eebbaa44)
             return string
         default:
-            throw Error.invalidColor(reason: "0x\(string) has invalid hex color string length")
+            throw GDError.invalidColor(reason: "0x\(string) has invalid hex color string length")
         }
     }
 }

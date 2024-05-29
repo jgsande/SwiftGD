@@ -4,7 +4,7 @@
 /// - invalidImage: Contains the reason this error was thrown.
 /// - invalidColor: Contains the reason this error was thrown.
 /// - invalidMaxColors: Asserts sane values for creating indexed Images
-public enum Error: Swift.Error {
+public enum GDError: Swift.Error {
     case invalidFormat
     case invalidImage(reason: String) // The reason this error was thrown
     case invalidColor(reason: String) // The reason this error was thrown.

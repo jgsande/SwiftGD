@@ -1,14 +1,14 @@
 import XCTest
-@testable import SwiftGD
+import SwiftGD
 
 class SwiftGDTests: XCTestCase {
     func testReduceColors() {
         let size = 16
-        let imColor = Color.init(red: 0.2,
+        let imColor = GDColor.init(red: 0.2,
                                  green: 0.10,
                                  blue: 0.77,
                                  alpha: 1.0)
-        let image = Image(width: size, height: size)
+        let image = GDImage(width: size, height: size)
         image!.fillRectangle(topLeft: Point.zero, bottomRight: Point(x: size, y: size), color: imColor)
         try! image?.reduceColors(max: 4, shouldDither: false)
         XCTAssert(image != nil, "ReduceColors without dithering should not destroy Image instance")

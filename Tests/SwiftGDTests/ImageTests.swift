@@ -1,5 +1,5 @@
 import XCTest
-@testable import SwiftGD
+import SwiftGD
 
 class TestImage: XCTestCase {
     /// Trying to create a list that *should* have at least
@@ -18,8 +18,8 @@ class TestImage: XCTestCase {
     ]
 
     func testRenderText() throws {
-        guard let image = Image(width: 640, height: 480) else {
-            throw Error.invalidImage(reason: "Could not initialize image")
+        guard let image = GDImage(width: 640, height: 480) else {
+            throw GDError.invalidImage(reason: "Could not initialize image")
         }
         let basepoint = Point(x: 320, y: 240)
         let renderBounds = image.renderText(
@@ -35,8 +35,8 @@ class TestImage: XCTestCase {
     }
 
     func testRenderEmptyText() throws {
-        guard let image = Image(width: 640, height: 480) else {
-            throw Error.invalidImage(reason: "Could not initialize image")
+        guard let image = GDImage(width: 640, height: 480) else {
+            throw GDError.invalidImage(reason: "Could not initialize image")
         }
         let renderBounds = image.renderText("", from: .zero, fontList: ["Arial", "Ubuntu", "Roboto"], color: .black, size: 18.0)
 
@@ -44,8 +44,8 @@ class TestImage: XCTestCase {
     }
 
     func testRenderEmptyFontList() throws {
-        guard let image = Image(width: 640, height: 480) else {
-            throw Error.invalidImage(reason: "Could not create image")
+        guard let image = GDImage(width: 640, height: 480) else {
+            throw GDError.invalidImage(reason: "Could not create image")
         }
         let renderBounds = image.renderText("Hello, World", from: .zero, fontList: [], color: .white, size: 18.0)
 

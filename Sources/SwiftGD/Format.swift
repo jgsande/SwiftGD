@@ -72,7 +72,7 @@ extension LibGdImportableFormatter {
     fileprivate func imagePtr(of data: Data) throws -> gdImagePtr {
         let (pointer, size) = try data.memory()
         guard let imagePtr = importFunction(size, pointer) else {
-            throw Error.invalidFormat
+            throw GDError.invalidFormat
         }
         return imagePtr
     }
@@ -87,7 +87,7 @@ extension LibGdExportableFormatter {
     fileprivate func data(of imagePtr: gdImagePtr) throws -> Data {
         var size: Int32 = 0
         guard let bytesPtr = exportFunction(imagePtr, &size) else {
-            throw Error.invalidFormat
+            throw GDError.invalidFormat
         }
         return Data(bytes: bytesPtr, count: Int(size))
     }
@@ -102,7 +102,7 @@ extension LibGdParametrizableExportFormatter {
     fileprivate func data(of imagePtr: gdImagePtr) throws -> Data {
         var size: Int32 = 0
         guard let bytesPtr = exportFunction(imagePtr, &size, exportParameters) else {
-            throw Error.invalidFormat
+            throw GDError.invalidFormat
         }
         return Data(bytesNoCopy: bytesPtr,
                     count: Int(size),
@@ -314,12 +314,12 @@ extension Data {
     fileprivate func memory() throws -> (pointer: UnsafeMutableRawPointer, size: Int32) {
         // Bytes must not exceed int32 as limit by `gdImageCreate..Ptr()`
         guard count < Int32.max else {
-            throw Error.invalidImage(reason: "Given image data exceeds maximum allowed bytes (must be int32 convertible)")
+            throw GDError.invalidImage(reason: "Given image data exceeds maximum allowed bytes (must be int32 convertible)")
         }
         
         return (pointer: try withUnsafeBytes {
             guard let baseAddress = $0.baseAddress else {
-                throw Error.invalidImage(reason: "Given image data doesn't have a valid base address in memory.")
+                throw GDError.invalidImage(reason: "Given image data doesn't have a valid base address in memory.")
             }
 
             return UnsafeMutableRawPointer(mutating: baseAddress)
@@ -339,6 +339,6 @@ extension Collection where Element: ImportableFormatter {
                 return imagePtr
             }
         }
-        throw Error.invalidImage(reason: "No matching raster formatter for given image found")
+        throw GDError.invalidImage(reason: "No matching raster formatter for given image found")
     }
 }
