@@ -394,7 +394,7 @@ extension GDImage {
     }
 }
 
-extension GDImage {
+extension gdImagePtr {
     func fillPolygon(polyPoints: [Point], color: GDColor, isHole: Bool = false) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
@@ -404,15 +404,15 @@ extension GDImage {
         let internalColor: Int32
         if isHole {
             // Assuming the background is transparent, otherwise use the background color here.
-            internalColor = gdImageColorAllocateAlpha(self.internalImage, 0, 0, 0, 127)
+            internalColor = gdImageColorAllocateAlpha(self, 0, 0, 0, 127)
         } else {
-            internalColor = gdImageColorAllocateAlpha(self.internalImage, red, green, blue, alpha)
+            internalColor = gdImageColorAllocateAlpha(self, red, green, blue, alpha)
         }
         
-        defer { gdImageColorDeallocate(self.internalImage, internalColor) }
+        defer { gdImageColorDeallocate(self, internalColor) }
         
         var ps = polyPoints.map { gdPoint(x: Int32($0.x), y: Int32($0.y)) }
         
-        gdImageFilledPolygon(self.internalImage, &ps, Int32(ps.count), internalColor)
+        gdImageFilledPolygon(self, &ps, Int32(ps.count), internalColor)
     }
 }
