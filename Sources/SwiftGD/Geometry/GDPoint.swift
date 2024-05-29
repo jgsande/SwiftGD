@@ -1,5 +1,5 @@
 /// A structure that contains a point in a two-dimensional coordinate system.
-public struct Point {
+public struct GDPoint {
     /// The x-coordinate of the point.
     public var x: Int
 
@@ -17,9 +17,9 @@ public struct Point {
     }
 }
 
-extension Point {
+extension GDPoint {
     /// The point at the origin (0,0).
-    public static let zero = Point(x: 0, y: 0)
+    public static let zero = GDPoint(x: 0, y: 0)
 
     /// Creates a point with specified coordinates.
     ///
@@ -31,7 +31,7 @@ extension Point {
     }
 }
 
-extension Point: Equatable {
+extension GDPoint: Equatable {
     /// Returns a Boolean value indicating whether two values are equal.
     ///
     /// Equality is the inverse of inequality. For any values `a` and `b`,
@@ -40,7 +40,7 @@ extension Point: Equatable {
     /// - Parameters:
     ///   - lhs: A value to compare.
     ///   - rhs: Another value to compare.
-    public static func == (lhs: Point, rhs: Point) -> Bool {
+    public static func == (lhs: GDPoint, rhs: GDPoint) -> Bool {
         return lhs.x == rhs.x && lhs.y == rhs.y
     }
 }

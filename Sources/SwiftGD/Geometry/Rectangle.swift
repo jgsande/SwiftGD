@@ -1,7 +1,7 @@
 /// A structure that represents a rectangle.
 public struct Rectangle {
     /// The origin of the rectangle.
-    public var point: Point
+    public var point: GDPoint
 
     /// The size of the rectangle.
     public var size: Size
@@ -11,7 +11,7 @@ public struct Rectangle {
     /// - Parameters:
     ///   - point: The origin of the rectangle
     ///   - height: The size of the rectangle
-    public init(point: Point, size: Size) {
+    public init(point: GDPoint, size: Size) {
         self.point = point
         self.size = size
     }
@@ -29,7 +29,7 @@ extension Rectangle {
     ///   - width: The width value of the size
     ///   - height: The height value of the size
     public init(x: Int, y: Int, width: Int, height: Int) {
-        self.init(point: Point(x: x, y: y), size: Size(width: width, height: height))
+        self.init(point: GDPoint(x: x, y: y), size: Size(width: width, height: height))
     }
 
     /// Creates a rectangle at specified point and given size.

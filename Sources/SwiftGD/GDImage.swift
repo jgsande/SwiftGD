@@ -139,8 +139,8 @@ public class GDImage {
     ///   text).
     @discardableResult
     public func renderText(
-        _ text: String, from: Point, fontList: [String], color: GDColor, size: Double, angle: Angle = .zero
-    ) -> (upperLeft: Point, upperRight: Point, lowerRight: Point, lowerLeft: Point) {
+        _ text: String, from: GDPoint, fontList: [String], color: GDColor, size: Double, angle: Angle = .zero
+    ) -> (upperLeft: GDPoint, upperRight: GDPoint, lowerRight: GDPoint, lowerLeft: GDPoint) {
         /// Notes on `gdImageStringFT`:
         /// - it returns an Tuple of empty `Point`s if there is nothing to render or no valid fonts
         /// - `gdImageStringFT` accepts a semicolon delimited list of fonts.
@@ -164,14 +164,14 @@ public class GDImage {
         var boundingBox: [Int32] = .init(repeating: .zero, count: 8)
         gdImageStringFT(internalImage, &boundingBox, internalColor, &joinedFonts, size, -angle.radians, Int32(from.x), Int32(from.y), &textCChar)
 
-        let lowerLeft = Point(x: boundingBox[0], y: boundingBox[1])
-        let lowerRight = Point(x: boundingBox[2], y: boundingBox[3])
-        let upperRight = Point(x: boundingBox[4], y: boundingBox[5])
-        let upperLeft = Point(x: boundingBox[6], y: boundingBox[7])
+        let lowerLeft = GDPoint(x: boundingBox[0], y: boundingBox[1])
+        let lowerRight = GDPoint(x: boundingBox[2], y: boundingBox[3])
+        let upperRight = GDPoint(x: boundingBox[4], y: boundingBox[5])
+        let upperLeft = GDPoint(x: boundingBox[6], y: boundingBox[7])
         return (upperLeft, upperRight, lowerRight, lowerLeft)
     }
 
-    public func fill(from: Point, color: GDColor) {
+    public func fill(from: GDPoint, color: GDColor) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)
@@ -182,7 +182,7 @@ public class GDImage {
         gdImageFill(internalImage, Int32(from.x), Int32(from.y), internalColor)
     }
 
-    public func drawLine(from: Point, to: Point, color: GDColor) {
+    public func drawLine(from: GDPoint, to: GDPoint, color: GDColor) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)
@@ -193,7 +193,7 @@ public class GDImage {
         gdImageLine(internalImage, Int32(from.x), Int32(from.y), Int32(to.x), Int32(to.y), internalColor)
     }
 
-    public func drawImage(_ image:GDImage, at topLeft: Point = .zero) {
+    public func drawImage(_ image:GDImage, at topLeft: GDPoint = .zero) {
         let width = Int32(self.size.width - topLeft.x)
         let height = Int32(self.size.height - topLeft.y)
         let dst_x = Int32(topLeft.x)
@@ -202,7 +202,7 @@ public class GDImage {
         gdImageCopy(internalImage, image.internalImage, dst_x, dst_y, 0, 0, width, height)
     }
 
-    public func set(pixel: Point, to color: GDColor) {
+    public func set(pixel: GDPoint, to color: GDColor) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)
@@ -213,7 +213,7 @@ public class GDImage {
         gdImageSetPixel(internalImage, Int32(pixel.x), Int32(pixel.y), internalColor)
     }
 
-    public func get(pixel: Point) -> GDColor {
+    public func get(pixel: GDPoint) -> GDColor {
         let color = gdImageGetTrueColorPixel(internalImage, Int32(pixel.x), Int32(pixel.y))
         let a = Double((color >> 24) & 0xFF)
         let r = Double((color >> 16) & 0xFF)
@@ -223,7 +223,7 @@ public class GDImage {
         return GDColor(red: r / 255, green: g / 255, blue: b / 255, alpha: 1 - (a / 127))
     }
 
-    public func strokeEllipse(center: Point, size: Size, color: GDColor) {
+    public func strokeEllipse(center: GDPoint, size: Size, color: GDColor) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)
@@ -234,7 +234,7 @@ public class GDImage {
         gdImageEllipse(internalImage, Int32(center.x), Int32(center.y), Int32(size.width), Int32(size.height), internalColor)
     }
 
-    public func fillEllipse(center: Point, size: Size, color: GDColor) {
+    public func fillEllipse(center: GDPoint, size: Size, color: GDColor) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)
@@ -245,7 +245,7 @@ public class GDImage {
         gdImageFilledEllipse(internalImage, Int32(center.x), Int32(center.y), Int32(size.width), Int32(size.height), internalColor)
     }
 
-    public func strokeRectangle(topLeft: Point, bottomRight: Point, color: GDColor) {
+    public func strokeRectangle(topLeft: GDPoint, bottomRight: GDPoint, color: GDColor) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)
@@ -256,7 +256,7 @@ public class GDImage {
         gdImageRectangle(internalImage, Int32(topLeft.x), Int32(topLeft.y), Int32(bottomRight.x), Int32(bottomRight.y), internalColor)
     }
 
-    public func fillRectangle(topLeft: Point, bottomRight: Point, color: GDColor) {
+    public func fillRectangle(topLeft: GDPoint, bottomRight: GDPoint, color: GDColor) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)
@@ -395,7 +395,7 @@ extension GDImage {
 }
 
 extension gdImagePtr {
-    public func fillPolygon(polyPoints: [Point], color: GDColor, isHole: Bool = false) {
+    public func fillPolygon(polyPoints: [GDPoint], color: GDColor, isHole: Bool = false) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)

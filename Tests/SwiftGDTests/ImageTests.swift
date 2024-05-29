@@ -21,7 +21,7 @@ class TestImage: XCTestCase {
         guard let image = GDImage(width: 640, height: 480) else {
             throw GDError.invalidImage(reason: "Could not initialize image")
         }
-        let basepoint = Point(x: 320, y: 240)
+        let basepoint = GDPoint(x: 320, y: 240)
         let renderBounds = image.renderText(
             "SwiftGD",
             from: basepoint,
@@ -54,7 +54,7 @@ class TestImage: XCTestCase {
 }
 
 extension TestImage {
-    private func isEmptyBounds(for resultValues: (upperLeft: Point, upperRight: Point, lowerRight: Point, lowerLeft: Point)) throws -> Bool {
+    private func isEmptyBounds(for resultValues: (upperLeft: GDPoint, upperRight: GDPoint, lowerRight: GDPoint, lowerLeft: GDPoint)) throws -> Bool {
         return [
             resultValues.upperLeft,
             resultValues.upperRight,
