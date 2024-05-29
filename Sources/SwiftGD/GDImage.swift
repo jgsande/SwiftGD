@@ -395,7 +395,7 @@ extension GDImage {
 }
 
 extension gdImagePtr {
-    public func fillPolygon(polyPoints: [GDPoint], color: GDColor, isHole: Bool = false) {
+    public func fillPolygon(polyPoints: inout [gdPoint], color: GDColor, isHole: Bool = false) {
         let red = Int32(color.redComponent * 255.0)
         let green = Int32(color.greenComponent * 255.0)
         let blue = Int32(color.blueComponent * 255.0)
@@ -411,8 +411,6 @@ extension gdImagePtr {
         
         defer { gdImageColorDeallocate(self, internalColor) }
         
-        var ps = polyPoints.map { gdPoint(x: Int32($0.x), y: Int32($0.y)) }
-        
-        gdImageFilledPolygon(self, &ps, Int32(ps.count), internalColor)
+        gdImageFilledPolygon(self, &polyPoints, Int32(polyPoints.count), internalColor)
     }
 }
